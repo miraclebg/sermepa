@@ -8,7 +8,6 @@ use Exception;
  */
 class Tpv
 {
-
     private $_setEnviroment;
     private $_setMerchantData;
     private $_setTerminal;
@@ -184,6 +183,11 @@ class Tpv
         $this->_setParameters['DS_MERCHANT_URLOK'] = $url;
     }
 
+    public function setMerchantExtraData($data = null)
+    {
+        $this->_setParameters['DS_MERCHANT_MERCHANTDATA'] = $data;
+    }
+
     public function setMerchantIdentifier($identifier = null)
     {
         $this->_setParameters['DS_MERCHANT_IDENTIFIER'] = $identifier;
@@ -205,7 +209,6 @@ class Tpv
     {
         $this->_setVersion = $version;
     }
-
 
     /**
      * Generate Merchant Parameters
