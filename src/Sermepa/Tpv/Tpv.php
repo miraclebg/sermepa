@@ -351,10 +351,7 @@ class Tpv
     {
         if (strlen(trim($group)) > 0) {
             $this->_setParameters['DS_MERCHANT_GROUP'] = trim($group);
-        } else {
-            throw new Exception('Add marchant group');
         }
-
     }
 
     /**
