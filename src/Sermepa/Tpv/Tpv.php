@@ -1,4 +1,5 @@
 <?php
+
 namespace Sermepa\Tpv;
 
 use Exception;
@@ -346,6 +347,16 @@ class Tpv
         }
     }
 
+    public function setGroup($group = '')
+    {
+        if (strlen(trim($group)) > 0) {
+            $this->_setParameters['DS_MERCHANT_GROUP'] = trim($group);
+        } else {
+            throw new Exception('Add marchant group');
+        }
+
+    }
+
     /**
      * Set name of the user making the purchase (required)
      *
@@ -466,12 +477,12 @@ class Tpv
     public function check($key = '', $postData)
     {
         if (isset($postData)) {
-            $version = $postData["Ds_SignatureVersion"];
+            //$version = $postData["Ds_SignatureVersion"];
             $parameters = $postData["Ds_MerchantParameters"];
             $signatureReceived = $postData["Ds_Signature"];
 
 
-            $decodec = $this->decodeParameters($parameters);
+            //$decodec = $this->decodeParameters($parameters);
             $signature = $this->generateMerchantSignatureNotification($key, $parameters);
 
             if ($signature === $signatureReceived) {
@@ -502,7 +513,7 @@ class Tpv
 
     /**
      * Convert Array to json
-     * @param $data Array
+     * @param $data array
      * @return string Json
      */
     private function arrayToJson($data)
@@ -534,14 +545,14 @@ class Tpv
 
     /**
      * Encrypt to 3DES
-     * @param $data Data for encrypt
-     * @param $key Key
+     * @param string $data Data for encrypt
+     * @param string $key Key
      * @return string
      */
     private function encrypt_3DES($data, $key)
     {
         $iv = "\0\0\0\0\0\0\0\0";
-        $ciphertext = mcrypt_encrypt(MCRYPT_3DES, $key, $data, MCRYPT_MODE_CBC, $iv);
+        $ciphertext = @mcrypt_encrypt(MCRYPT_3DES, $key, $data, MCRYPT_MODE_CBC, $iv);
         return $ciphertext;
     }
 
@@ -549,21 +560,6 @@ class Tpv
     {
         $decode = base64_decode(strtr($data, '-_', '+/'));
         return $decode;
-    }
-
-    //http://stackoverflow.com/a/9111049/444225
-    private function priceToSQL($price)
-    {
-        $price = preg_replace('/[^0-9\.,]*/i', '', $price);
-        $price = str_replace(',', '.', $price);
-        if (substr($price, -3, 1) == '.') {
-            $price = explode('.', $price);
-            $last = array_pop($price);
-            $price = join($price, '') . '.' . $last;
-        } else {
-            $price = str_replace('.', '', $price);
-        }
-        return $price;
     }
 
     private function convertNumber($price)
